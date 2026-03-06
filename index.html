@@ -3,12 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Pesquisa Parnaíba">
     <meta name="theme-color" content="#1e40af">
-    <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="icon-192.png">
     <title>Pesquisa Política - Parnaíba (PI)</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -17,13 +12,6 @@
             padding: 0;
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
-            -webkit-touch-callout: none;
-        }
-
-        html, body {
-            height: 100%;
-            width: 100%;
-            overflow: hidden;
         }
 
         :root {
@@ -31,31 +19,32 @@
             --secondary-color: #0ea5e9;
             --success-color: #10b981;
             --danger-color: #ef4444;
+            --warning-color: #f59e0b;
             --light-bg: #f8fafc;
             --border-color: #e2e8f0;
             --text-primary: #1e293b;
             --text-secondary: #64748b;
+            --white: #ffffff;
+        }
+
+        html, body {
+            width: 100%;
+            min-height: 100%;
+            background: var(--light-bg);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: var(--text-primary);
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--light-bg);
-            color: var(--text-primary);
             display: flex;
             flex-direction: column;
-            height: 100vh;
-            width: 100vw;
-            position: fixed;
-            overflow: hidden;
         }
 
         header {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: white;
-            padding: 15px 16px;
-            flex-shrink: 0;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            padding-top: max(15px, env(safe-area-inset-top));
+            padding: 16px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.12);
         }
 
         .header-top {
@@ -65,16 +54,16 @@
         }
 
         .logo-box {
-            width: 52px;
-            height: 52px;
-            min-width: 52px;
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.15);
+            width: 56px;
+            height: 56px;
+            min-width: 56px;
+            border-radius: 14px;
+            background: rgba(255,255,255,0.16);
+            border: 1px solid rgba(255,255,255,0.24);
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.25);
             backdrop-filter: blur(4px);
         }
 
@@ -84,57 +73,44 @@
             object-fit: cover;
         }
 
-        .header-text {
-            flex: 1;
-        }
-
         .header-text h1 {
-            font-size: 18px;
+            font-size: 19px;
+            font-weight: 700;
             margin-bottom: 4px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 600;
         }
 
         .header-text p {
             font-size: 12px;
-            opacity: 0.9;
-        }
-
-        .container {
-            flex: 1;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-            padding-bottom: env(safe-area-inset-bottom);
+            opacity: 0.95;
         }
 
         .tabs {
             display: flex;
-            gap: 0;
-            background: white;
+            background: var(--white);
             border-bottom: 2px solid var(--border-color);
             position: sticky;
             top: 0;
-            z-index: 10;
-            flex-shrink: 0;
+            z-index: 20;
         }
 
         .tab-btn {
             flex: 1;
-            padding: 12px 8px;
             border: none;
-            background: white;
+            background: var(--white);
+            padding: 12px 8px;
             color: var(--text-secondary);
+            font-weight: 700;
             font-size: 13px;
-            font-weight: 600;
             cursor: pointer;
             border-bottom: 3px solid transparent;
-            transition: all 0.2s ease;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 4px;
+            gap: 5px;
+        }
+
+        .tab-btn i {
+            font-size: 18px;
         }
 
         .tab-btn.active {
@@ -142,14 +118,16 @@
             border-bottom-color: var(--primary-color);
         }
 
-        .tab-btn i {
-            font-size: 18px;
+        .container {
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 14px;
         }
 
         .tab-content {
             display: none;
-            padding: 12px 16px 16px;
-            animation: fadeIn 0.2s ease;
+            animation: fadeIn .2s ease;
         }
 
         .tab-content.active {
@@ -157,8 +135,8 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .stats {
@@ -169,177 +147,197 @@
         }
 
         .stat-box {
-            background: white;
-            border-radius: 12px;
-            padding: 12px 8px;
-            text-align: center;
+            background: var(--white);
             border: 1px solid var(--border-color);
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            border-radius: 14px;
+            padding: 14px 10px;
+            text-align: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
         }
 
         .stat-label {
             font-size: 11px;
             color: var(--text-secondary);
+            font-weight: 700;
             text-transform: uppercase;
-            font-weight: 600;
-            letter-spacing: 0.3px;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
         }
 
         .stat-value {
             font-size: 28px;
-            font-weight: 700;
+            font-weight: 800;
+        }
+
+        .stat-box:nth-child(1) .stat-value { color: #3b82f6; }
+        .stat-box:nth-child(2) .stat-value { color: #ec4899; }
+        .stat-box:nth-child(3) .stat-value { color: var(--success-color); }
+
+        .card {
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+        }
+
+        .card-title {
+            font-size: 15px;
+            font-weight: 800;
+            margin-bottom: 12px;
             color: var(--primary-color);
         }
 
-        .stat-box:nth-child(1) .stat-value {
-            color: #3b82f6;
-        }
-
-        .stat-box:nth-child(2) .stat-value {
-            color: #ec4899;
-        }
-
-        .stat-box:nth-child(3) .stat-value {
-            color: var(--success-color);
-        }
-
         .form-group {
-            margin-bottom: 16px;
+            margin-bottom: 14px;
         }
 
         label {
             display: block;
-            font-weight: 600;
-            margin-bottom: 6px;
-            color: var(--text-primary);
             font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 6px;
         }
 
         input[type="text"],
         input[type="number"],
         select {
             width: 100%;
-            padding: 14px 12px;
             border: 2px solid var(--border-color);
             border-radius: 10px;
+            padding: 13px 12px;
             font-size: 16px;
             font-family: inherit;
-            transition: all 0.2s ease;
-            -webkit-appearance: none;
-            appearance: none;
-            background-color: white;
+            outline: none;
+            background: white;
+            transition: .2s ease;
         }
 
         input[type="text"]:focus,
         input[type="number"]:focus,
         select:focus {
-            outline: none;
             border-color: var(--secondary-color);
-            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+            box-shadow: 0 0 0 3px rgba(14,165,233,0.12);
         }
 
         .radio-group {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 10px;
-            margin-bottom: 16px;
         }
 
         .radio-option {
             position: relative;
         }
 
-        .radio-option input[type="radio"] {
+        .radio-option input {
             position: absolute;
             opacity: 0;
-            width: 0;
-            height: 0;
+            pointer-events: none;
         }
 
         .radio-label {
             display: block;
-            padding: 14px 12px;
             border: 2px solid var(--border-color);
             border-radius: 10px;
+            padding: 14px 12px;
             text-align: center;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
+            font-weight: 700;
             background: white;
-            font-size: 14px;
+            cursor: pointer;
+            transition: .2s ease;
         }
 
-        .radio-option input[type="radio"]:checked + .radio-label {
+        .radio-option input:checked + .radio-label {
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: white;
             border-color: var(--primary-color);
         }
 
         .btn {
-            padding: 14px 16px;
+            width: 100%;
             border: none;
             border-radius: 10px;
+            padding: 14px 16px;
             font-size: 14px;
-            font-weight: 600;
+            font-weight: 800;
             cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
+            display: inline-flex;
             justify-content: center;
+            align-items: center;
             gap: 8px;
-            -webkit-appearance: none;
-            appearance: none;
-            width: 100%;
+            transition: .2s ease;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
         }
 
         .btn-primary {
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: white;
-            margin-bottom: 10px;
-        }
-
-        .btn-primary:active {
-            transform: scale(0.98);
         }
 
         .btn-secondary {
             background: white;
             color: var(--text-primary);
             border: 2px solid var(--border-color);
-            margin-bottom: 8px;
-        }
-
-        .btn-secondary:active {
-            background: var(--light-bg);
         }
 
         .btn-danger {
             background: var(--danger-color);
             color: white;
-            padding: 8px 10px;
-            font-size: 12px;
-            width: auto;
-            min-width: 36px;
         }
 
-        .acoes-cell {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
+        .btn-warning {
+            background: var(--warning-color);
+            color: white;
+        }
+
+        .btn-small {
+            width: auto;
+            padding: 8px 10px;
+            font-size: 12px;
+            border-radius: 8px;
+        }
+
+        .btn-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .info-box {
+            margin-top: 14px;
+            background: rgba(14,165,233,0.08);
+            border: 1px solid rgba(14,165,233,0.22);
+            border-radius: 10px;
+            padding: 12px 14px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .bairro-status {
+            margin-top: 10px;
+            padding: 10px 12px;
+            border-radius: 10px;
+            background: rgba(16,185,129,0.08);
+            border: 1px solid rgba(16,185,129,0.2);
+            color: #047857;
+            font-size: 13px;
+            font-weight: 700;
         }
 
         .table-container {
             overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 13px;
             background: white;
-            border-radius: 10px;
+            border-radius: 12px;
             overflow: hidden;
         }
 
@@ -348,20 +346,25 @@
             color: white;
         }
 
-        th {
+        th, td {
             padding: 10px 8px;
             text-align: left;
-            font-weight: 600;
-            font-size: 12px;
+            font-size: 13px;
         }
 
         td {
-            padding: 10px 8px;
             border-bottom: 1px solid var(--border-color);
+            vertical-align: middle;
         }
 
         tbody tr:last-child td {
             border-bottom: none;
+        }
+
+        .acoes-cell {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
         }
 
         .empty-state {
@@ -371,182 +374,109 @@
         }
 
         .empty-state i {
-            font-size: 40px;
-            margin-bottom: 12px;
+            font-size: 42px;
             color: var(--border-color);
-        }
-
-        .empty-state p {
-            font-size: 14px;
-            margin-bottom: 4px;
+            margin-bottom: 12px;
         }
 
         .alert {
             padding: 12px 14px;
             border-radius: 10px;
-            margin: 12px 16px 0;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            margin-bottom: 12px;
             font-size: 13px;
-            animation: slideDown 0.3s ease;
-        }
-
-        @keyframes slideDown {
-            from {
-                transform: translateY(-15px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
+            font-weight: 700;
+            animation: fadeIn .2s ease;
         }
 
         .alert-success {
-            background: rgba(16, 185, 129, 0.1);
+            background: rgba(16,185,129,0.1);
             color: #047857;
-            border: 1px solid rgba(16, 185, 129, 0.3);
+            border: 1px solid rgba(16,185,129,0.25);
         }
 
         .alert-error {
-            background: rgba(239, 68, 68, 0.1);
+            background: rgba(239,68,68,0.1);
             color: #b91c1c;
-            border: 1px solid rgba(239, 68, 68, 0.3);
+            border: 1px solid rgba(239,68,68,0.25);
+        }
+
+        .alert-warning {
+            background: rgba(245,158,11,0.12);
+            color: #92400e;
+            border: 1px solid rgba(245,158,11,0.26);
         }
 
         .modal {
             display: none;
             position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.45);
             z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
+            padding: 16px;
+            align-items: flex-end;
+            justify-content: center;
         }
 
         .modal.active {
             display: flex;
-            align-items: flex-end;
-            animation: fadeIn 0.2s ease;
         }
 
         .modal-content {
-            background: white;
             width: 100%;
-            padding: 20px 16px;
-            border-radius: 16px 16px 0 0;
-            box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.1);
-            max-height: 90vh;
+            max-width: 700px;
+            background: white;
+            border-radius: 18px 18px 0 0;
+            padding: 18px 16px 20px;
+            max-height: 92vh;
             overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-            padding-bottom: calc(20px + env(safe-area-inset-bottom));
         }
 
         .modal-header {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            margin-bottom: 16px;
+            justify-content: space-between;
+            margin-bottom: 14px;
         }
 
         .modal-header h2 {
+            font-size: 17px;
             color: var(--primary-color);
-            font-size: 16px;
         }
 
         .close-btn {
             background: none;
             border: none;
-            font-size: 24px;
+            font-size: 26px;
+            color: var(--text-secondary);
             cursor: pointer;
-            color: var(--text-secondary);
-            padding: 0;
-            width: 32px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
-        .info-box {
-            background: rgba(14, 165, 233, 0.1);
-            border: 1px solid rgba(14, 165, 233, 0.3);
-            border-radius: 10px;
-            padding: 12px 14px;
-            font-size: 12px;
-            color: var(--text-secondary);
-            margin-bottom: 16px;
-            line-height: 1.5;
-        }
-
-        @media (max-width: 480px) {
+        @media (max-width: 600px) {
             .header-text h1 {
-                font-size: 16px;
+                font-size: 17px;
             }
 
             .header-text p {
                 font-size: 11px;
             }
 
+            .logo-box {
+                width: 48px;
+                height: 48px;
+                min-width: 48px;
+            }
+
             .tab-btn {
                 font-size: 12px;
-                padding: 10px 6px;
             }
 
             .stat-value {
                 font-size: 24px;
             }
 
-            .btn {
-                padding: 13px 14px;
-                font-size: 13px;
+            th, td {
+                font-size: 12px;
             }
-
-            .logo-box {
-                width: 46px;
-                height: 46px;
-                min-width: 46px;
-            }
-        }
-
-        input[type="text"],
-        input[type="number"],
-        select {
-            font-size: 16px !important;
-        }
-
-        @supports (padding: max(0px)) {
-            body {
-                padding-left: env(safe-area-inset-left);
-                padding-right: env(safe-area-inset-right);
-            }
-
-            header {
-                padding-left: max(12px, env(safe-area-inset-left));
-                padding-right: max(12px, env(safe-area-inset-right));
-            }
-
-            .tab-content {
-                padding-left: max(12px, env(safe-area-inset-left));
-                padding-right: max(12px, env(safe-area-inset-right));
-            }
-        }
-
-        body {
-            -webkit-user-select: none;
-            user-select: none;
-        }
-
-        input, textarea {
-            -webkit-user-select: text;
-            user-select: text;
-        }
-
-        button {
-            -webkit-user-select: none;
-            user-select: none;
         }
     </style>
 </head>
@@ -557,10 +487,7 @@
                 <img src="logo.png" alt="Logo" class="logo-img">
             </div>
             <div class="header-text">
-                <h1>
-                    <i class="fas fa-clipboard-list"></i>
-                    Pesquisa Parnaíba
-                </h1>
+                <h1><i class="fas fa-clipboard-list"></i> Pesquisa Parnaíba</h1>
                 <p>Registre entrevistas - PI 2026</p>
             </div>
         </div>
@@ -600,115 +527,132 @@
                 </div>
             </div>
 
-            <form id="formEntrevista">
-                <div class="form-group">
-                    <label for="bairro">📍 Bairro ou Povoado</label>
-                    <select id="bairro" required>
-<option value="">Selecione o bairro/povoado</option>
+            <div class="card">
+                <div class="card-title">Registrar entrevista</div>
 
-<option>Sabiazal</option>
-<option>Alto Santa Maria</option>
-<option>Dirceu Arcoverde</option>
-<option>Piauí</option>
-<option>Betânia</option>
-<option>Planalto</option>
-<option>N. Sra. Montserrat</option>
-<option>Raul Bacelar I</option>
-<option>Raul Bacelar II</option>
-<option>Raul Bacelar III</option>
-<option>Alberto Silva</option>
-<option>Simplicio Dias</option>
-<option>São João</option>
-<option>Carpina</option>
-<option>Portinho</option>
+                <form id="formEntrevista">
+                    <div class="form-group">
+                        <label for="bairro">📍 Bairro ou Povoado</label>
+                        <select id="bairro" required></select>
+                    </div>
 
-</select>
-                </div>
+                    <div class="bairro-status" id="bairroStatus">
+                        Bairro atual: nenhum selecionado
+                    </div>
 
-                <div class="form-group">
-                    <label>👤 Sexo</label>
-                    <div class="radio-group">
-                        <div class="radio-option">
-                            <input type="radio" id="homem" name="sexo" value="Homem" required>
-                            <label for="homem" class="radio-label">👨 Homem</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="mulher" name="sexo" value="Mulher" required>
-                            <label for="mulher" class="radio-label">👩 Mulher</label>
+                    <div class="form-group" style="margin-top: 14px;">
+                        <label>👤 Sexo</label>
+                        <div class="radio-group">
+                            <div class="radio-option">
+                                <input type="radio" id="homem" name="sexo" value="Homem" required>
+                                <label for="homem" class="radio-label">👨 Homem</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="mulher" name="sexo" value="Mulher" required>
+                                <label for="mulher" class="radio-label">👩 Mulher</label>
+                            </div>
                         </div>
                     </div>
+
+                    <div class="form-group">
+                        <label for="quantidade">🔢 Quantidade</label>
+                        <input type="number" id="quantidade" min="1" value="1" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i>
+                        Registrar Pesquisa
+                    </button>
+                </form>
+
+                <div class="info-box">
+                    <strong>💾 Funcionamento:</strong><br>
+                    O bairro/povoado fica selecionado para você registrar várias entrevistas seguidas. Só muda quando você escolher outro.
                 </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Adicionar novo bairro manualmente</div>
 
                 <div class="form-group">
-                    <label for="quantidade">🔢 Quantidade</label>
-                    <input type="number" id="quantidade" placeholder="1" min="1" value="1" required>
+                    <label for="novoBairro">Novo bairro/povoado</label>
+                    <input type="text" id="novoBairro" placeholder="Digite o nome do novo bairro">
                 </div>
 
-                <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-save"></i>
-                    Registrar Entrevista
-                </button>
-            </form>
+                <div class="btn-row">
+                    <button type="button" class="btn btn-secondary" onclick="adicionarBairroManual()">
+                        <i class="fas fa-plus-circle"></i>
+                        Adicionar Bairro
+                    </button>
 
-            <div class="info-box">
-                <strong>💾 Seus dados são salvos automaticamente no seu celular.</strong><br>
-                O nome do bairro/povoado continua no campo depois de salvar. Só muda quando você apagar e digitar outro.
+                    <button type="button" class="btn btn-warning" onclick="limparBairroAtual()">
+                        <i class="fas fa-eraser"></i>
+                        Limpar Seleção
+                    </button>
+                </div>
             </div>
         </div>
 
         <div id="lista" class="tab-content">
-            <div class="table-container">
-                <table id="tabelaRegistros">
-                    <thead>
-                        <tr>
-                            <th>Bairro</th>
-                            <th>Sexo</th>
-                            <th>Qtd</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody id="bodyTabela">
-                        <tr>
-                            <td colspan="4" style="text-align: center; padding: 40px 20px;">
-                                <div class="empty-state">
-                                    <i class="fas fa-inbox"></i>
-                                    <p>Nenhum registro</p>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="card">
+                <div class="card-title">Registros</div>
+
+                <div class="table-container">
+                    <table id="tabelaRegistros">
+                        <thead>
+                            <tr>
+                                <th>Bairro</th>
+                                <th>Sexo</th>
+                                <th>Qtd</th>
+                                <th>Hora</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bodyTabela">
+                            <tr>
+                                <td colspan="5">
+                                    <div class="empty-state">
+                                        <i class="fas fa-inbox"></i>
+                                        <p>Nenhum registro</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
         <div id="opcoes" class="tab-content">
-            <div style="padding: 8px 0;">
-                <button class="btn btn-secondary" id="btnExportarExcel">
+            <div class="card">
+                <div class="card-title">Exportação e ações</div>
+
+                <button class="btn btn-secondary" id="btnExportarExcel" style="margin-bottom: 10px;">
                     <i class="fas fa-file-excel"></i>
                     Exportar Excel
                 </button>
 
-                <button class="btn btn-secondary" id="btnExportarCSV">
+                <button class="btn btn-secondary" id="btnExportarCSV" style="margin-bottom: 10px;">
                     <i class="fas fa-file-csv"></i>
                     Exportar CSV
                 </button>
 
-                <button class="btn btn-secondary" id="btnCompartilhar">
+                <button class="btn btn-secondary" id="btnCompartilhar" style="margin-bottom: 10px;">
                     <i class="fas fa-share-alt"></i>
                     Compartilhar Link
                 </button>
 
-                <button class="btn btn-secondary" id="btnLimparDados">
+                <button class="btn btn-danger" id="btnLimparDados">
                     <i class="fas fa-trash"></i>
                     Limpar Tudo
                 </button>
 
-                <div class="info-box" style="margin-top: 16px;">
+                <div class="info-box">
                     <strong>ℹ️ Informações:</strong><br>
-                    • Seus dados ficam apenas no seu celular<br>
-                    • Cada pessoa tem seus próprios dados<br>
-                    • Compatível com iOS e Android<br>
-                    • Funciona offline
+                    • Os dados ficam salvos neste aparelho/navegador<br>
+                    • Você pode adicionar novos bairros manualmente<br>
+                    • Exporta os registros em CSV e Excel<br>
+                    • Para a logo aparecer, coloque um arquivo chamado <strong>logo.png</strong> na mesma pasta
                 </div>
             </div>
         </div>
@@ -720,10 +664,11 @@
                 <h2>✏️ Editar Entrevista</h2>
                 <button type="button" class="close-btn" onclick="fecharModal()">&times;</button>
             </div>
+
             <form id="formEdicao">
                 <div class="form-group">
                     <label for="edBairro">Bairro</label>
-                    <input type="text" id="edBairro" required>
+                    <select id="edBairro" required></select>
                 </div>
 
                 <div class="form-group">
@@ -745,10 +690,11 @@
                     <input type="number" id="edQuantidade" min="1" required>
                 </div>
 
-                <button type="submit" class="btn btn-primary">
+                <button type="submit" class="btn btn-primary" style="margin-bottom: 10px;">
                     <i class="fas fa-save"></i>
                     Salvar
                 </button>
+
                 <button type="button" class="btn btn-secondary" onclick="fecharModal()">
                     Cancelar
                 </button>
@@ -757,113 +703,147 @@
     </div>
 
     <script>
-        const CHAVE_STORAGE = 'pesquisa_parnaiba';
-        let ultimoBairroDigitado = localStorage.getItem('pesquisa_parnaiba_bairro_atual') || '';
+        const CHAVE_DADOS = 'pesquisa_parnaiba_dados';
+        const CHAVE_BAIRROS = 'pesquisa_parnaiba_bairros';
+        const CHAVE_BAIRRO_ATUAL = 'pesquisa_parnaiba_bairro_atual';
 
-        class GerenciadorPesquisa {
-            constructor() {
-                this.carregarDados();
-            }
+        const bairrosPadrao = [
+            'Sabiazal',
+            'Alto Santa Maria',
+            'Dirceu Arcoverde',
+            'Piauí',
+            'Betânia',
+            'Planalto',
+            'N. Sra. Montserrat',
+            'Raul Bacelar I',
+            'Raul Bacelar II',
+            'Raul Bacelar III',
+            'Alberto Silva',
+            'Simplicio Dias',
+            'São João',
+            'Carpina',
+            'Portinho'
+        ];
 
-            carregarDados() {
-                const dados = localStorage.getItem(CHAVE_STORAGE);
-                this.entrevistas = dados ? JSON.parse(dados) : [];
-            }
-
-            salvarDados() {
-                localStorage.setItem(CHAVE_STORAGE, JSON.stringify(this.entrevistas));
-            }
-
-            adicionarEntrevista(bairro, sexo, quantidade) {
-                const entrevista = {
-                    id: Date.now() + Math.floor(Math.random() * 1000),
-                    bairro: bairro.trim(),
-                    sexo: sexo,
-                    quantidade: parseInt(quantidade),
-                    data: new Date().toLocaleTimeString('pt-BR', {
-                        hour: '2-digit',
-                        minute: '2-digit'
-                    })
-                };
-                this.entrevistas.push(entrevista);
-                this.salvarDados();
-                return entrevista;
-            }
-
-            editarEntrevista(id, bairro, sexo, quantidade) {
-                const index = this.entrevistas.findIndex(e => e.id === id);
-                if (index !== -1) {
-                    this.entrevistas[index] = {
-                        ...this.entrevistas[index],
-                        bairro: bairro.trim(),
-                        sexo: sexo,
-                        quantidade: parseInt(quantidade)
-                    };
-                    this.salvarDados();
-                    return true;
-                }
-                return false;
-            }
-
-            excluirEntrevista(id) {
-                const index = this.entrevistas.findIndex(e => e.id === id);
-                if (index !== -1) {
-                    this.entrevistas.splice(index, 1);
-                    this.salvarDados();
-                    return true;
-                }
-                return false;
-            }
-
-            obterTotais() {
-                const totais = { homens: 0, mulheres: 0, geral: 0 };
-                this.entrevistas.forEach(e => {
-                    if (e.sexo === 'Homem') {
-                        totais.homens += e.quantidade;
-                    } else if (e.sexo === 'Mulher') {
-                        totais.mulheres += e.quantidade;
-                    }
-                });
-                totais.geral = totais.homens + totais.mulheres;
-                return totais;
-            }
-
-            limparTodos() {
-                this.entrevistas = [];
-                this.salvarDados();
-                localStorage.removeItem('pesquisa_parnaiba_bairro_atual');
-            }
-        }
-
-        const gerenciador = new GerenciadorPesquisa();
-
-        const formEntrevista = document.getElementById('formEntrevista');
-        const bodyTabela = document.getElementById('bodyTabela');
-        const modalEdicao = document.getElementById('modalEdicao');
-        const campoBairro = document.getElementById('bairro');
-        const campoQuantidade = document.getElementById('quantidade');
-
+        let bairros = carregarBairrosSalvos();
+        let entrevistas = carregarEntrevistasSalvas();
+        let bairroAtual = localStorage.getItem(CHAVE_BAIRRO_ATUAL) || '';
         let idEmEdicao = null;
 
-        if (ultimoBairroDigitado) {
-            campoBairro.value = ultimoBairroDigitado;
+        const formEntrevista = document.getElementById('formEntrevista');
+        const formEdicao = document.getElementById('formEdicao');
+        const campoBairro = document.getElementById('bairro');
+        const campoQuantidade = document.getElementById('quantidade');
+        const campoNovoBairro = document.getElementById('novoBairro');
+        const bodyTabela = document.getElementById('bodyTabela');
+        const modalEdicao = document.getElementById('modalEdicao');
+        const bairroStatus = document.getElementById('bairroStatus');
+        const campoEdBairro = document.getElementById('edBairro');
+
+        function carregarBairrosSalvos() {
+            const salvo = localStorage.getItem(CHAVE_BAIRROS);
+            if (!salvo) return [...bairrosPadrao];
+
+            try {
+                const lista = JSON.parse(salvo);
+                if (Array.isArray(lista) && lista.length > 0) {
+                    return lista;
+                }
+                return [...bairrosPadrao];
+            } catch {
+                return [...bairrosPadrao];
+            }
         }
 
-        campoBairro.addEventListener('input', () => {
-            ultimoBairroDigitado = campoBairro.value;
-            localStorage.setItem('pesquisa_parnaiba_bairro_atual', ultimoBairroDigitado);
+        function carregarEntrevistasSalvas() {
+            const salvo = localStorage.getItem(CHAVE_DADOS);
+            if (!salvo) return [];
+
+            try {
+                const lista = JSON.parse(salvo);
+                return Array.isArray(lista) ? lista : [];
+            } catch {
+                return [];
+            }
+        }
+
+        function salvarBairros() {
+            localStorage.setItem(CHAVE_BAIRROS, JSON.stringify(bairros));
+        }
+
+        function salvarEntrevistas() {
+            localStorage.setItem(CHAVE_DADOS, JSON.stringify(entrevistas));
+        }
+
+        function salvarBairroAtual(valor) {
+            bairroAtual = valor || '';
+            localStorage.setItem(CHAVE_BAIRRO_ATUAL, bairroAtual);
+            atualizarStatusBairro();
+        }
+
+        function atualizarStatusBairro() {
+            if (bairroAtual) {
+                bairroStatus.textContent = `Bairro atual: ${bairroAtual}`;
+            } else {
+                bairroStatus.textContent = 'Bairro atual: nenhum selecionado';
+            }
+        }
+
+        function preencherSelectBairros(selectElement, incluirPlaceholder = true) {
+            const valorAtual = selectElement.value;
+
+            selectElement.innerHTML = '';
+
+            if (incluirPlaceholder) {
+                const optionVazia = document.createElement('option');
+                optionVazia.value = '';
+                optionVazia.textContent = 'Selecione o bairro/povoado';
+                selectElement.appendChild(optionVazia);
+            }
+
+            bairros.forEach(nome => {
+                const option = document.createElement('option');
+                option.value = nome;
+                option.textContent = nome;
+                selectElement.appendChild(option);
+            });
+
+            if (valorAtual && bairros.includes(valorAtual)) {
+                selectElement.value = valorAtual;
+            }
+        }
+
+        function inicializarSelects() {
+            preencherSelectBairros(campoBairro, true);
+            preencherSelectBairros(campoEdBairro, true);
+
+            if (bairroAtual && bairros.includes(bairroAtual)) {
+                campoBairro.value = bairroAtual;
+            }
+            atualizarStatusBairro();
+        }
+
+        function abrirAba(abaId, botao) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+
+            document.getElementById(abaId).classList.add('active');
+            botao.classList.add('active');
+        }
+
+        campoBairro.addEventListener('change', () => {
+            salvarBairroAtual(campoBairro.value);
         });
 
         formEntrevista.addEventListener('submit', (e) => {
             e.preventDefault();
 
+            const bairro = campoBairro.value;
             const sexoSelecionado = document.querySelector('input[name="sexo"]:checked');
-            const bairro = campoBairro.value.trim();
-            const quantidade = campoQuantidade.value;
+            const quantidade = parseInt(campoQuantidade.value, 10);
 
             if (!bairro) {
-                exibirAlerta('Digite o bairro ou povoado.', 'error');
-                campoBairro.focus();
+                exibirAlerta('Selecione um bairro ou povoado.', 'error');
                 return;
             }
 
@@ -872,66 +852,74 @@
                 return;
             }
 
-            gerenciador.adicionarEntrevista(bairro, sexoSelecionado.value, quantidade);
+            if (!quantidade || quantidade < 1) {
+                exibirAlerta('Informe uma quantidade válida.', 'error');
+                return;
+            }
 
-            ultimoBairroDigitado = bairro;
-            localStorage.setItem('pesquisa_parnaiba_bairro_atual', ultimoBairroDigitado);
+            const entrevista = {
+                id: Date.now() + Math.floor(Math.random() * 1000),
+                bairro,
+                sexo: sexoSelecionado.value,
+                quantidade,
+                data: new Date().toLocaleTimeString('pt-BR', {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                })
+            };
 
-            document.querySelectorAll('input[name="sexo"]').forEach(input => {
-                input.checked = false;
-            });
+            entrevistas.push(entrevista);
+            salvarEntrevistas();
+            salvarBairroAtual(bairro);
 
+            document.querySelectorAll('input[name="sexo"]').forEach(input => input.checked = false);
             campoQuantidade.value = 1;
-            campoBairro.value = ultimoBairroDigitado;
+            campoBairro.value = bairroAtual;
 
-            exibirAlerta('✅ Entrevista registrada!', 'success');
             atualizarTabela();
             atualizarTotais();
+            exibirAlerta('✅ Pesquisa registrada com sucesso!', 'success');
         });
 
-        document.getElementById('btnExportarExcel').addEventListener('click', exportarExcel);
-        document.getElementById('btnExportarCSV').addEventListener('click', exportarCSV);
-        document.getElementById('btnCompartilhar').addEventListener('click', compartilharLink);
-        document.getElementById('btnLimparDados').addEventListener('click', () => {
-            if (confirm('Tem certeza? Vai apagar TODOS os registros!')) {
-                gerenciador.limparTodos();
-                campoBairro.value = '';
-                ultimoBairroDigitado = '';
-                atualizarTabela();
-                atualizarTotais();
-                exibirAlerta('Dados removidos', 'success');
+        function adicionarBairroManual() {
+            const nome = campoNovoBairro.value.trim();
+
+            if (!nome) {
+                exibirAlerta('Digite o nome do novo bairro.', 'error');
+                return;
             }
-        });
 
-        document.getElementById('formEdicao').addEventListener('submit', (e) => {
-            e.preventDefault();
-
-            if (idEmEdicao !== null) {
-                const bairro = document.getElementById('edBairro').value;
-                const sexo = document.querySelector('input[name="edSexo"]:checked').value;
-                const quantidade = document.getElementById('edQuantidade').value;
-
-                if (gerenciador.editarEntrevista(idEmEdicao, bairro, sexo, quantidade)) {
-                    exibirAlerta('✅ Registro atualizado!', 'success');
-                    fecharModal();
-                    atualizarTabela();
-                    atualizarTotais();
-                }
+            const jaExiste = bairros.some(b => b.toLowerCase() === nome.toLowerCase());
+            if (jaExiste) {
+                exibirAlerta('Esse bairro já existe na lista.', 'warning');
+                return;
             }
-        });
 
-        function abrirAba(abaId, botao) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-            document.getElementById(abaId).classList.add('active');
-            botao.classList.add('active');
+            bairros.push(nome);
+            bairros.sort((a, b) => a.localeCompare(b, 'pt-BR'));
+
+            salvarBairros();
+            preencherSelectBairros(campoBairro, true);
+            preencherSelectBairros(campoEdBairro, true);
+
+            campoBairro.value = nome;
+            salvarBairroAtual(nome);
+
+            campoNovoBairro.value = '';
+            exibirAlerta('✅ Bairro adicionado com sucesso!', 'success');
+        }
+
+        function limparBairroAtual() {
+            campoBairro.value = '';
+            salvarBairroAtual('');
+            exibirAlerta('Seleção de bairro limpa.', 'success');
         }
 
         function atualizarTabela() {
-            if (gerenciador.entrevistas.length === 0) {
+            if (entrevistas.length === 0) {
                 bodyTabela.innerHTML = `
                     <tr>
-                        <td colspan="4" style="text-align: center; padding: 40px 20px;">
+                        <td colspan="5">
                             <div class="empty-state">
                                 <i class="fas fa-inbox"></i>
                                 <p>Nenhum registro</p>
@@ -942,15 +930,16 @@
                 return;
             }
 
-            bodyTabela.innerHTML = gerenciador.entrevistas.map(e => `
+            bodyTabela.innerHTML = entrevistas.map(item => `
                 <tr>
-                    <td>${escaparHtml(e.bairro)}</td>
-                    <td>${e.sexo === 'Homem' ? '👨 Homem' : '👩 Mulher'}</td>
-                    <td><strong>${e.quantidade}</strong></td>
+                    <td>${escaparHtml(item.bairro)}</td>
+                    <td>${item.sexo === 'Homem' ? '👨 Homem' : '👩 Mulher'}</td>
+                    <td><strong>${item.quantidade}</strong></td>
+                    <td>${escaparHtml(item.data || '')}</td>
                     <td>
                         <div class="acoes-cell">
-                            <button class="btn btn-danger" onclick="abrirEdicao(${e.id})" title="Editar">✏️</button>
-                            <button class="btn btn-danger" onclick="excluirRegistro(${e.id})" style="background: #ef4444;" title="Excluir">🗑️</button>
+                            <button class="btn btn-warning btn-small" onclick="abrirEdicao(${item.id})" type="button">✏️</button>
+                            <button class="btn btn-danger btn-small" onclick="excluirRegistro(${item.id})" type="button">🗑️</button>
                         </div>
                     </td>
                 </tr>
@@ -958,22 +947,35 @@
         }
 
         function atualizarTotais() {
-            const totais = gerenciador.obterTotais();
-            document.getElementById('totalHomens').textContent = totais.homens;
-            document.getElementById('totalMulheres').textContent = totais.mulheres;
-            document.getElementById('totalGeral').textContent = totais.geral;
+            let homens = 0;
+            let mulheres = 0;
+
+            entrevistas.forEach(item => {
+                if (item.sexo === 'Homem') {
+                    homens += Number(item.quantidade) || 0;
+                } else if (item.sexo === 'Mulher') {
+                    mulheres += Number(item.quantidade) || 0;
+                }
+            });
+
+            document.getElementById('totalHomens').textContent = homens;
+            document.getElementById('totalMulheres').textContent = mulheres;
+            document.getElementById('totalGeral').textContent = homens + mulheres;
         }
 
         function abrirEdicao(id) {
             idEmEdicao = id;
-            const entrevista = gerenciador.entrevistas.find(e => e.id === id);
+            const item = entrevistas.find(e => e.id === id);
+            if (!item) return;
 
-            if (entrevista) {
-                document.getElementById('edBairro').value = entrevista.bairro;
-                document.querySelector(`input[name="edSexo"][value="${entrevista.sexo}"]`).checked = true;
-                document.getElementById('edQuantidade').value = entrevista.quantidade;
-                modalEdicao.classList.add('active');
-            }
+            preencherSelectBairros(campoEdBairro, true);
+            campoEdBairro.value = item.bairro;
+            document.getElementById('edQuantidade').value = item.quantidade;
+            document.querySelectorAll('input[name="edSexo"]').forEach(input => {
+                input.checked = input.value === item.sexo;
+            });
+
+            modalEdicao.classList.add('active');
         }
 
         function fecharModal() {
@@ -981,103 +983,153 @@
             idEmEdicao = null;
         }
 
-        function excluirRegistro(id) {
-            if (confirm('Deletar este registro?')) {
-                gerenciador.excluirEntrevista(id);
-                exibirAlerta('Registro removido', 'success');
-                atualizarTabela();
-                atualizarTotais();
+        formEdicao.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            if (idEmEdicao === null) return;
+
+            const bairro = campoEdBairro.value;
+            const sexoInput = document.querySelector('input[name="edSexo"]:checked');
+            const quantidade = parseInt(document.getElementById('edQuantidade').value, 10);
+
+            if (!bairro) {
+                exibirAlerta('Selecione um bairro na edição.', 'error');
+                return;
             }
+
+            if (!sexoInput) {
+                exibirAlerta('Selecione o sexo na edição.', 'error');
+                return;
+            }
+
+            if (!quantidade || quantidade < 1) {
+                exibirAlerta('Informe uma quantidade válida na edição.', 'error');
+                return;
+            }
+
+            const index = entrevistas.findIndex(e => e.id === idEmEdicao);
+            if (index === -1) return;
+
+            entrevistas[index] = {
+                ...entrevistas[index],
+                bairro,
+                sexo: sexoInput.value,
+                quantidade
+            };
+
+            salvarEntrevistas();
+            atualizarTabela();
+            atualizarTotais();
+            fecharModal();
+            exibirAlerta('✅ Registro atualizado!', 'success');
+        });
+
+        function excluirRegistro(id) {
+            if (!confirm('Deletar este registro?')) return;
+
+            entrevistas = entrevistas.filter(item => item.id !== id);
+            salvarEntrevistas();
+            atualizarTabela();
+            atualizarTotais();
+            exibirAlerta('Registro removido.', 'success');
         }
 
-        function exibirAlerta(mensagem, tipo) {
+        function exibirAlerta(mensagem, tipo = 'success') {
             const container = document.getElementById('alertContainer');
-            const alertId = 'alert_' + Date.now();
-            const html = `<div class="alert alert-${tipo}" id="${alertId}">${mensagem}</div>`;
-            container.insertAdjacentHTML('beforeend', html);
+            const id = 'alert_' + Date.now();
+
+            const div = document.createElement('div');
+            div.className = `alert alert-${tipo}`;
+            div.id = id;
+            div.textContent = mensagem;
+
+            container.appendChild(div);
 
             setTimeout(() => {
-                const alerta = document.getElementById(alertId);
-                if (alerta) alerta.remove();
+                const el = document.getElementById(id);
+                if (el) el.remove();
             }, 2500);
         }
 
-        function exportarExcel() {
-            const totais = gerenciador.obterTotais();
-            let csv = 'PESQUISA POLÍTICA - PARNAÍBA\n\n';
-            csv += 'RESUMO\n';
-            csv += `Homens,${totais.homens}\n`;
-            csv += `Mulheres,${totais.mulheres}\n`;
-            csv += `Total,${totais.geral}\n\n`;
-            csv += 'DETALHES\n';
-            csv += 'Bairro,Sexo,Quantidade,Hora\n';
-            csv += gerenciador.entrevistas.map(e => `${formatarCSV(e.bairro)},${formatarCSV(e.sexo)},${e.quantidade},${formatarCSV(e.data)}`).join('\n');
+        function exportarCSV() {
+            let csv = 'Bairro,Sexo,Quantidade,Hora\n';
+            entrevistas.forEach(item => {
+                csv += `${formatarCSV(item.bairro)},${formatarCSV(item.sexo)},${item.quantidade},${formatarCSV(item.data || '')}\n`;
+            });
 
-            const link = document.createElement('a');
-            link.setAttribute('href', 'data:application/vnd.ms-excel;charset=utf-8,' + encodeURIComponent(csv));
-            link.setAttribute('download', `pesquisa_${new Date().getTime()}.xls`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            baixarArquivo('pesquisa_parnaiba.csv', 'text/csv;charset=utf-8;', csv);
+            exibirAlerta('✅ CSV baixado!', 'success');
+        }
+
+        function exportarExcel() {
+            let conteudo = 'PESQUISA POLÍTICA - PARNAÍBA\n\n';
+            conteudo += 'Bairro\tSexo\tQuantidade\tHora\n';
+
+            entrevistas.forEach(item => {
+                conteudo += `${item.bairro}\t${item.sexo}\t${item.quantidade}\t${item.data || ''}\n`;
+            });
+
+            baixarArquivo('pesquisa_parnaiba.xls', 'application/vnd.ms-excel;charset=utf-8;', conteudo);
             exibirAlerta('✅ Excel baixado!', 'success');
         }
 
-        function exportarCSV() {
-            const totais = gerenciador.obterTotais();
-            let csv = 'PESQUISA POLÍTICA - PARNAÍBA\n\n';
-            csv += 'RESUMO\n';
-            csv += `Homens,${totais.homens}\n`;
-            csv += `Mulheres,${totais.mulheres}\n`;
-            csv += `Total,${totais.geral}\n\n`;
-            csv += 'DETALHES\n';
-            csv += 'Bairro,Sexo,Quantidade,Hora\n';
-            csv += gerenciador.entrevistas.map(e => `${formatarCSV(e.bairro)},${formatarCSV(e.sexo)},${e.quantidade},${formatarCSV(e.data)}`).join('\n');
-
+        function baixarArquivo(nome, tipo, conteudo) {
+            const blob = new Blob([conteudo], { type: tipo });
+            const url = URL.createObjectURL(blob);
             const link = document.createElement('a');
-            link.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv));
-            link.setAttribute('download', `pesquisa_${new Date().getTime()}.csv`);
+
+            link.href = url;
+            link.download = nome;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-            exibirAlerta('✅ CSV baixado!', 'success');
+
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
         }
 
         function compartilharLink() {
             const url = window.location.href;
+
             if (navigator.share) {
                 navigator.share({
                     title: 'Pesquisa Parnaíba',
-                    url: url
-                });
+                    url
+                }).catch(() => {});
             } else {
                 alert('Link para compartilhar:\n\n' + url);
             }
         }
 
         function formatarCSV(valor) {
-            return `"${String(valor).replace(/"/g, '""')}"`;
+            return `"${String(valor ?? '').replace(/"/g, '""')}"`;
         }
 
         function escaparHtml(texto) {
             const div = document.createElement('div');
-            div.textContent = texto;
+            div.textContent = String(texto ?? '');
             return div.innerHTML;
         }
+
+        document.getElementById('btnExportarCSV').addEventListener('click', exportarCSV);
+        document.getElementById('btnExportarExcel').addEventListener('click', exportarExcel);
+        document.getElementById('btnCompartilhar').addEventListener('click', compartilharLink);
+        document.getElementById('btnLimparDados').addEventListener('click', () => {
+            if (!confirm('Tem certeza? Vai apagar todos os registros?')) return;
+
+            entrevistas = [];
+            salvarEntrevistas();
+            atualizarTabela();
+            atualizarTotais();
+            exibirAlerta('Todos os registros foram apagados.', 'success');
+        });
 
         modalEdicao.addEventListener('click', (e) => {
             if (e.target === modalEdicao) fecharModal();
         });
 
+        inicializarSelects();
         atualizarTabela();
         atualizarTotais();
-    </script>
-
-    <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./service-worker.js');
-            });
-        }
     </script>
 </body>
 </html>
