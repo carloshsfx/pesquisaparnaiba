@@ -49,7 +49,6 @@
             overflow: hidden;
         }
 
-        /* Header */
         header {
             background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
             color: white;
@@ -103,7 +102,6 @@
             opacity: 0.9;
         }
 
-        /* Container Principal */
         .container {
             flex: 1;
             overflow-y: auto;
@@ -111,7 +109,6 @@
             padding-bottom: env(safe-area-inset-bottom);
         }
 
-        /* Abas */
         .tabs {
             display: flex;
             gap: 0;
@@ -149,7 +146,6 @@
             font-size: 18px;
         }
 
-        /* Conteúdo das Abas */
         .tab-content {
             display: none;
             padding: 12px 16px 16px;
@@ -165,7 +161,6 @@
             to { opacity: 1; }
         }
 
-        /* Estatísticas */
         .stats {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -209,7 +204,6 @@
             color: var(--success-color);
         }
 
-        /* Formulário */
         .form-group {
             margin-bottom: 16px;
         }
@@ -245,7 +239,6 @@
             box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
         }
 
-        /* Radio Buttons */
         .radio-group {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -283,7 +276,6 @@
             border-color: var(--primary-color);
         }
 
-        /* Botões */
         .btn {
             padding: 14px 16px;
             border: none;
@@ -337,7 +329,6 @@
             flex-wrap: wrap;
         }
 
-        /* Tabela */
         .table-container {
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
@@ -373,7 +364,6 @@
             border-bottom: none;
         }
 
-        /* Empty State */
         .empty-state {
             text-align: center;
             padding: 40px 20px;
@@ -391,7 +381,6 @@
             margin-bottom: 4px;
         }
 
-        /* Alertas */
         .alert {
             padding: 12px 14px;
             border-radius: 10px;
@@ -420,7 +409,12 @@
             border: 1px solid rgba(16, 185, 129, 0.3);
         }
 
-        /* Modal */
+        .alert-error {
+            background: rgba(239, 68, 68, 0.1);
+            color: #b91c1c;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
         .modal {
             display: none;
             position: fixed;
@@ -476,7 +470,6 @@
             justify-content: center;
         }
 
-        /* Info Box */
         .info-box {
             background: rgba(14, 165, 233, 0.1);
             border: 1px solid rgba(14, 165, 233, 0.3);
@@ -488,7 +481,6 @@
             line-height: 1.5;
         }
 
-        /* Responsivo */
         @media (max-width: 480px) {
             .header-text h1 {
                 font-size: 16px;
@@ -519,14 +511,12 @@
             }
         }
 
-        /* Prevenir zoom em input */
         input[type="text"],
         input[type="number"],
         select {
             font-size: 16px !important;
         }
 
-        /* Safe area */
         @supports (padding: max(0px)) {
             body {
                 padding-left: env(safe-area-inset-left);
@@ -544,7 +534,6 @@
             }
         }
 
-        /* Gestos */
         body {
             -webkit-user-select: none;
             user-select: none;
@@ -577,7 +566,6 @@
         </div>
     </header>
 
-    <!-- Abas -->
     <div class="tabs">
         <button class="tab-btn active" onclick="abrirAba('registrar', this)">
             <i class="fas fa-plus"></i>
@@ -593,11 +581,9 @@
         </button>
     </div>
 
-    <!-- Conteúdo -->
     <div class="container">
         <div id="alertContainer"></div>
 
-        <!-- Aba Registrar -->
         <div id="registrar" class="tab-content active">
             <div class="stats">
                 <div class="stat-box">
@@ -647,11 +633,10 @@
 
             <div class="info-box">
                 <strong>💾 Seus dados são salvos automaticamente no seu celular.</strong><br>
-                O bairro/povoado continua preenchido até você mudar manualmente.
+                O nome do bairro/povoado continua no campo depois de salvar. Só muda quando você apagar e digitar outro.
             </div>
         </div>
 
-        <!-- Aba Lista -->
         <div id="lista" class="tab-content">
             <div class="table-container">
                 <table id="tabelaRegistros">
@@ -677,7 +662,6 @@
             </div>
         </div>
 
-        <!-- Aba Opções -->
         <div id="opcoes" class="tab-content">
             <div style="padding: 8px 0;">
                 <button class="btn btn-secondary" id="btnExportarExcel">
@@ -711,7 +695,6 @@
         </div>
     </div>
 
-    <!-- Modal Edição -->
     <div id="modalEdicao" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -756,6 +739,7 @@
 
     <script>
         const CHAVE_STORAGE = 'pesquisa_parnaiba';
+        let ultimoBairroDigitado = localStorage.getItem('pesquisa_parnaiba_bairro_atual') || '';
 
         class GerenciadorPesquisa {
             constructor() {
@@ -773,7 +757,7 @@
 
             adicionarEntrevista(bairro, sexo, quantidade) {
                 const entrevista = {
-                    id: Date.now(),
+                    id: Date.now() + Math.floor(Math.random() * 1000),
                     bairro: bairro.trim(),
                     sexo: sexo,
                     quantidade: parseInt(quantidade),
@@ -828,6 +812,7 @@
             limparTodos() {
                 this.entrevistas = [];
                 this.salvarDados();
+                localStorage.removeItem('pesquisa_parnaiba_bairro_atual');
             }
         }
 
@@ -836,25 +821,49 @@
         const formEntrevista = document.getElementById('formEntrevista');
         const bodyTabela = document.getElementById('bodyTabela');
         const modalEdicao = document.getElementById('modalEdicao');
+        const campoBairro = document.getElementById('bairro');
+        const campoQuantidade = document.getElementById('quantidade');
+
         let idEmEdicao = null;
+
+        if (ultimoBairroDigitado) {
+            campoBairro.value = ultimoBairroDigitado;
+        }
+
+        campoBairro.addEventListener('input', () => {
+            ultimoBairroDigitado = campoBairro.value;
+            localStorage.setItem('pesquisa_parnaiba_bairro_atual', ultimoBairroDigitado);
+        });
 
         formEntrevista.addEventListener('submit', (e) => {
             e.preventDefault();
 
-            const bairro = document.getElementById('bairro').value;
             const sexoSelecionado = document.querySelector('input[name="sexo"]:checked');
-            const quantidade = document.getElementById('quantidade').value;
+            const bairro = campoBairro.value.trim();
+            const quantidade = campoQuantidade.value;
+
+            if (!bairro) {
+                exibirAlerta('Digite o bairro ou povoado.', 'error');
+                campoBairro.focus();
+                return;
+            }
 
             if (!sexoSelecionado) {
-                exibirAlerta('Selecione homem ou mulher.', 'success');
+                exibirAlerta('Selecione homem ou mulher.', 'error');
                 return;
             }
 
             gerenciador.adicionarEntrevista(bairro, sexoSelecionado.value, quantidade);
 
-            // Mantém o bairro e limpa só sexo + quantidade
-            document.querySelectorAll('input[name="sexo"]').forEach(input => input.checked = false);
-            document.getElementById('quantidade').value = 1;
+            ultimoBairroDigitado = bairro;
+            localStorage.setItem('pesquisa_parnaiba_bairro_atual', ultimoBairroDigitado);
+
+            document.querySelectorAll('input[name="sexo"]').forEach(input => {
+                input.checked = false;
+            });
+
+            campoQuantidade.value = 1;
+            campoBairro.value = ultimoBairroDigitado;
 
             exibirAlerta('✅ Entrevista registrada!', 'success');
             atualizarTabela();
@@ -867,6 +876,8 @@
         document.getElementById('btnLimparDados').addEventListener('click', () => {
             if (confirm('Tem certeza? Vai apagar TODOS os registros!')) {
                 gerenciador.limparTodos();
+                campoBairro.value = '';
+                ultimoBairroDigitado = '';
                 atualizarTabela();
                 atualizarTotais();
                 exibirAlerta('Dados removidos', 'success');
@@ -893,7 +904,6 @@
         function abrirAba(abaId, botao) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-
             document.getElementById(abaId).classList.add('active');
             botao.classList.add('active');
         }
@@ -915,7 +925,7 @@
 
             bodyTabela.innerHTML = gerenciador.entrevistas.map(e => `
                 <tr>
-                    <td>${e.bairro}</td>
+                    <td>${escaparHtml(e.bairro)}</td>
                     <td>${e.sexo === 'Homem' ? '👨 Homem' : '👩 Mulher'}</td>
                     <td><strong>${e.quantidade}</strong></td>
                     <td>
@@ -982,12 +992,14 @@
             csv += `Total,${totais.geral}\n\n`;
             csv += 'DETALHES\n';
             csv += 'Bairro,Sexo,Quantidade,Hora\n';
-            csv += gerenciador.entrevistas.map(e => `${e.bairro},${e.sexo},${e.quantidade},${e.data}`).join('\n');
+            csv += gerenciador.entrevistas.map(e => `${formatarCSV(e.bairro)},${formatarCSV(e.sexo)},${e.quantidade},${formatarCSV(e.data)}`).join('\n');
 
             const link = document.createElement('a');
             link.setAttribute('href', 'data:application/vnd.ms-excel;charset=utf-8,' + encodeURIComponent(csv));
             link.setAttribute('download', `pesquisa_${new Date().getTime()}.xls`);
+            document.body.appendChild(link);
             link.click();
+            document.body.removeChild(link);
             exibirAlerta('✅ Excel baixado!', 'success');
         }
 
@@ -1000,12 +1012,14 @@
             csv += `Total,${totais.geral}\n\n`;
             csv += 'DETALHES\n';
             csv += 'Bairro,Sexo,Quantidade,Hora\n';
-            csv += gerenciador.entrevistas.map(e => `"${e.bairro}","${e.sexo}",${e.quantidade},"${e.data}"`).join('\n');
+            csv += gerenciador.entrevistas.map(e => `${formatarCSV(e.bairro)},${formatarCSV(e.sexo)},${e.quantidade},${formatarCSV(e.data)}`).join('\n');
 
             const link = document.createElement('a');
             link.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv));
             link.setAttribute('download', `pesquisa_${new Date().getTime()}.csv`);
+            document.body.appendChild(link);
             link.click();
+            document.body.removeChild(link);
             exibirAlerta('✅ CSV baixado!', 'success');
         }
 
@@ -1019,6 +1033,16 @@
             } else {
                 alert('Link para compartilhar:\n\n' + url);
             }
+        }
+
+        function formatarCSV(valor) {
+            return `"${String(valor).replace(/"/g, '""')}"`;
+        }
+
+        function escaparHtml(texto) {
+            const div = document.createElement('div');
+            div.textContent = texto;
+            return div.innerHTML;
         }
 
         modalEdicao.addEventListener('click', (e) => {
