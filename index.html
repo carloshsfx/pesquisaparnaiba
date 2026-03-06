@@ -59,7 +59,37 @@
             padding-top: max(15px, env(safe-area-inset-top));
         }
 
-        header h1 {
+        .header-top {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-box {
+            width: 52px;
+            height: 52px;
+            min-width: 52px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(4px);
+        }
+
+        .logo-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .header-text {
+            flex: 1;
+        }
+
+        .header-text h1 {
             font-size: 18px;
             margin-bottom: 4px;
             display: flex;
@@ -68,7 +98,7 @@
             font-weight: 600;
         }
 
-        header p {
+        .header-text p {
             font-size: 12px;
             opacity: 0.9;
         }
@@ -295,9 +325,16 @@
         .btn-danger {
             background: var(--danger-color);
             color: white;
-            padding: 8px 12px;
+            padding: 8px 10px;
             font-size: 12px;
             width: auto;
+            min-width: 36px;
+        }
+
+        .acoes-cell {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
         }
 
         /* Tabela */
@@ -358,7 +395,7 @@
         .alert {
             padding: 12px 14px;
             border-radius: 10px;
-            margin-bottom: 12px;
+            margin: 12px 16px 0;
             display: flex;
             align-items: center;
             gap: 8px;
@@ -451,25 +488,13 @@
             line-height: 1.5;
         }
 
-        /* Action Buttons */
-        .action-group {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 12px;
-        }
-
-        .action-group .btn {
-            margin-bottom: 0;
-        }
-
         /* Responsivo */
         @media (max-width: 480px) {
-            header h1 {
+            .header-text h1 {
                 font-size: 16px;
             }
 
-            header p {
+            .header-text p {
                 font-size: 11px;
             }
 
@@ -485,6 +510,12 @@
             .btn {
                 padding: 13px 14px;
                 font-size: 13px;
+            }
+
+            .logo-box {
+                width: 46px;
+                height: 46px;
+                min-width: 46px;
             }
         }
 
@@ -532,24 +563,31 @@
 </head>
 <body>
     <header>
-        <h1>
-            <i class="fas fa-clipboard-list"></i>
-            Pesquisa Parnaíba
-        </h1>
-        <p>Registre entrevistas - PI 2026</p>
+        <div class="header-top">
+            <div class="logo-box">
+                <img src="logo.png" alt="Logo" class="logo-img">
+            </div>
+            <div class="header-text">
+                <h1>
+                    <i class="fas fa-clipboard-list"></i>
+                    Pesquisa Parnaíba
+                </h1>
+                <p>Registre entrevistas - PI 2026</p>
+            </div>
+        </div>
     </header>
 
     <!-- Abas -->
     <div class="tabs">
-        <button class="tab-btn active" onclick="abrirAba('registrar')">
+        <button class="tab-btn active" onclick="abrirAba('registrar', this)">
             <i class="fas fa-plus"></i>
             <span>Registrar</span>
         </button>
-        <button class="tab-btn" onclick="abrirAba('lista')">
+        <button class="tab-btn" onclick="abrirAba('lista', this)">
             <i class="fas fa-list"></i>
             <span>Lista</span>
         </button>
-        <button class="tab-btn" onclick="abrirAba('opcoes')">
+        <button class="tab-btn" onclick="abrirAba('opcoes', this)">
             <i class="fas fa-cog"></i>
             <span>Opções</span>
         </button>
@@ -561,7 +599,6 @@
 
         <!-- Aba Registrar -->
         <div id="registrar" class="tab-content active">
-            <!-- Estatísticas -->
             <div class="stats">
                 <div class="stat-box">
                     <div class="stat-label">👨 Homens</div>
@@ -577,7 +614,6 @@
                 </div>
             </div>
 
-            <!-- Formulário -->
             <form id="formEntrevista">
                 <div class="form-group">
                     <label for="bairro">📍 Bairro ou Povoado</label>
@@ -611,7 +647,7 @@
 
             <div class="info-box">
                 <strong>💾 Seus dados são salvos automaticamente no seu celular.</strong><br>
-                Cada pessoa tem seus próprios dados.
+                O bairro/povoado continua preenchido até você mudar manualmente.
             </div>
         </div>
 
@@ -719,8 +755,7 @@
     </div>
 
     <script>
-        // ========== GERENCIAMENTO DE DADOS ==========
-        const CHAVE_STORAGE = 'pesquisa_parnaiba'; // chave fixa para manter os dados no mesmo aparelho
+        const CHAVE_STORAGE = 'pesquisa_parnaiba';
 
         class GerenciadorPesquisa {
             constructor() {
@@ -742,7 +777,10 @@
                     bairro: bairro.trim(),
                     sexo: sexo,
                     quantidade: parseInt(quantidade),
-                    data: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
+                    data: new Date().toLocaleTimeString('pt-BR', {
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    })
                 };
                 this.entrevistas.push(entrevista);
                 this.salvarDados();
@@ -795,7 +833,6 @@
 
         const gerenciador = new GerenciadorPesquisa();
 
-        // ========== EVENTOS ==========
         const formEntrevista = document.getElementById('formEntrevista');
         const bodyTabela = document.getElementById('bodyTabela');
         const modalEdicao = document.getElementById('modalEdicao');
@@ -803,13 +840,21 @@
 
         formEntrevista.addEventListener('submit', (e) => {
             e.preventDefault();
+
             const bairro = document.getElementById('bairro').value;
-            const sexo = document.querySelector('input[name="sexo"]:checked').value;
+            const sexoSelecionado = document.querySelector('input[name="sexo"]:checked');
             const quantidade = document.getElementById('quantidade').value;
 
-            gerenciador.adicionarEntrevista(bairro, sexo, quantidade);
-            formEntrevista.reset();
-            document.getElementById('bairro').focus();
+            if (!sexoSelecionado) {
+                exibirAlerta('Selecione homem ou mulher.', 'success');
+                return;
+            }
+
+            gerenciador.adicionarEntrevista(bairro, sexoSelecionado.value, quantidade);
+
+            // Mantém o bairro e limpa só sexo + quantidade
+            document.querySelectorAll('input[name="sexo"]').forEach(input => input.checked = false);
+            document.getElementById('quantidade').value = 1;
 
             exibirAlerta('✅ Entrevista registrada!', 'success');
             atualizarTabela();
@@ -830,6 +875,7 @@
 
         document.getElementById('formEdicao').addEventListener('submit', (e) => {
             e.preventDefault();
+
             if (idEmEdicao !== null) {
                 const bairro = document.getElementById('edBairro').value;
                 const sexo = document.querySelector('input[name="edSexo"]:checked').value;
@@ -844,12 +890,12 @@
             }
         });
 
-        // ========== FUNÇÕES ==========
-        function abrirAba(abaId) {
+        function abrirAba(abaId, botao) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+
             document.getElementById(abaId).classList.add('active');
-            event.target.closest('.tab-btn').classList.add('active');
+            botao.classList.add('active');
         }
 
         function atualizarTabela() {
@@ -870,11 +916,13 @@
             bodyTabela.innerHTML = gerenciador.entrevistas.map(e => `
                 <tr>
                     <td>${e.bairro}</td>
-                    <td>${e.sexo === 'Homem' ? '👨' : '👩'}</td>
+                    <td>${e.sexo === 'Homem' ? '👨 Homem' : '👩 Mulher'}</td>
                     <td><strong>${e.quantidade}</strong></td>
                     <td>
-                        <button class="btn btn-danger" onclick="abrirEdicao(${e.id})">✏️</button>
-                        <button class="btn btn-danger" onclick="excluirRegistro(${e.id})" style="background: #ef4444;">🗑️</button>
+                        <div class="acoes-cell">
+                            <button class="btn btn-danger" onclick="abrirEdicao(${e.id})" title="Editar">✏️</button>
+                            <button class="btn btn-danger" onclick="excluirRegistro(${e.id})" style="background: #ef4444;" title="Excluir">🗑️</button>
+                        </div>
                     </td>
                 </tr>
             `).join('');
@@ -890,6 +938,7 @@
         function abrirEdicao(id) {
             idEmEdicao = id;
             const entrevista = gerenciador.entrevistas.find(e => e.id === id);
+
             if (entrevista) {
                 document.getElementById('edBairro').value = entrevista.bairro;
                 document.querySelector(`input[name="edSexo"][value="${entrevista.sexo}"]`).checked = true;
@@ -917,6 +966,7 @@
             const alertId = 'alert_' + Date.now();
             const html = `<div class="alert alert-${tipo}" id="${alertId}">${mensagem}</div>`;
             container.insertAdjacentHTML('beforeend', html);
+
             setTimeout(() => {
                 const alerta = document.getElementById(alertId);
                 if (alerta) alerta.remove();
@@ -962,7 +1012,10 @@
         function compartilharLink() {
             const url = window.location.href;
             if (navigator.share) {
-                navigator.share({ title: 'Pesquisa Parnaíba', url: url });
+                navigator.share({
+                    title: 'Pesquisa Parnaíba',
+                    url: url
+                });
             } else {
                 alert('Link para compartilhar:\n\n' + url);
             }
@@ -983,6 +1036,5 @@
             });
         }
     </script>
-
 </body>
 </html>
